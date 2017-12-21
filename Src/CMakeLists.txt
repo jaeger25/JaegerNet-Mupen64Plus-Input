@@ -11,8 +11,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
 
 include(cotire)
 
-add_compile_options(/W4 /WX)
+add_compile_options(/W4 /WX /wd4201)
+
+include_directories(../Dependencies/installed/${VCPKG_TARGET_TRIPLET}/include)
+include_directories(./inc)
 
 # Include sub-projects.
-#add_subdirectory ("dll")
+add_subdirectory ("dll")
 #add_subdirectory ("lib")
