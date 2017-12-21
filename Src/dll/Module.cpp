@@ -17,7 +17,7 @@ EXPORT m64p_error CALL PluginGetVersion(m64p_plugin_type* PluginType, int* Plugi
     }
     if (APIVersion)
     {
-        *PluginVersion = InputPluginApiVersion;
+        *APIVersion = InputPluginApiVersion;
     }
     if (PluginNamePtr)
     {
