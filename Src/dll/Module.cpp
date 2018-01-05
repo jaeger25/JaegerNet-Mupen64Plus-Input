@@ -9,8 +9,6 @@
 using namespace JaegerNet;
 using namespace JaegerNet::Mupen64Plus::Input;
 
-std::array<CONTROL*, 4> MupenControllers;
-
 EXPORT m64p_error CALL PluginGetVersion(m64p_plugin_type* PluginType, int* PluginVersion, int* APIVersion, const char** PluginNamePtr, int* Capabilities)
 {
     if (PluginType)
@@ -78,9 +76,9 @@ EXPORT void CALL InitiateControllers(CONTROL_INFO ControlInfo)
 
     for (int i = 0; i < NumControllers; i++)
     {
-        MupenControllers[i] = ControlInfo.Controls + i;
-        MupenControllers[i]->Plugin = PLUGIN_NONE;
-        MupenControllers[i]->Present = true;
+        CONTROL* pController = ControlInfo.Controls + i;
+        pController->Plugin = PLUGIN_NONE;
+        pController->Present = true;
     }
 }
 
