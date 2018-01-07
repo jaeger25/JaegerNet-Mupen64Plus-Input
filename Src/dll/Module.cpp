@@ -5,6 +5,7 @@
 #include <m64p/m64p_common.h>
 #include <m64p/m64p_plugin.h>
 #include "Constants.h"
+#include "Player.h"
 
 using namespace JaegerNet;
 using namespace JaegerNet::Mupen64Plus::Input;
@@ -65,9 +66,16 @@ EXPORT void CALL ControllerCommand(int /*Control*/, unsigned char* /*Command*/)
     // Unused
 }
 
-EXPORT void CALL GetKeys(int /*Control*/, BUTTONS* /*Keys*/)
+EXPORT void CALL GetKeys(int Control, BUTTONS* /*Keys*/)
 {
+    static std::array<Player, 4> Players = { {1, 2, 3, 4} };
 
+    if (Control < 0 || Control > 3)
+    {
+        std::terminate();
+    }
+
+    ControllerState controllerSTate = Players[Control].NextControllerState();
 }
 
 EXPORT void CALL InitiateControllers(CONTROL_INFO ControlInfo)

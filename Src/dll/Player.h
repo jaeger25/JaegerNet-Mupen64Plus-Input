@@ -20,6 +20,6 @@ namespace JaegerNet::Mupen64Plus::Input
         int m_playerNumber;
         JaegerNet::EventRegistrationToken m_controllerStateChangedToken;
         JaegerNet::EventRegistrationToken m_playerConnectedToken;
-        std::queue<const ControllerState> m_controllerStates;
+        std::queue<ControllerState> m_controllerStates;
     };
 }
