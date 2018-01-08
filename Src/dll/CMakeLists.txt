@@ -13,27 +13,7 @@ install(TARGETS JaegerNet-Mupen64Plus-Input EXPORT JaegerNet-Mupen64Plus-InputTa
     RUNTIME DESTINATION bin
 )
 
-get_target_property(JaegerNetServer_Location JaegerNet::JaegerNetServer IMPORTED_LOCATION_RELEASE)
-get_target_property(JaegerNetServer_Location_Debug JaegerNet::JaegerNetServer IMPORTED_LOCATION_DEBUG)
-
-install(
-  FILES
-    "${JaegerNetServer_Location}"
-  DESTINATION
-    bin
-  CONFIGURATIONS
-    Release
-)
-
-install(
-  FILES
-    "${JaegerNetServer_Location_Debug}"
-  DESTINATION
-    bin
-  CONFIGURATIONS
-    Debug
-)
-
-unset(_importedLocation)
+FILE(GLOB DependencyBinaries ${Dependency_Install_Path}/bin/*)
+INSTALL(FILES ${DependencyBinaries} DESTINATION bin)
 
 cotire(JaegerNet-Mupen64Plus-Input)

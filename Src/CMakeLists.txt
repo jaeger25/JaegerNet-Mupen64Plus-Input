@@ -9,13 +9,14 @@ set(JaegerNet_VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 17)
 
 # cotire
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMake)
 
 include(cotire)
 
 add_compile_options(/W4 /WX /wd4201)
 
-include_directories(../Dependencies/installed/${VCPKG_TARGET_TRIPLET}/include)
+set(Dependency_Install_Path ${CMAKE_SOURCE_DIR}/../Dependencies/installed/${VCPKG_TARGET_TRIPLET})
+include_directories(${Dependency_Install_Path}/include)
 include_directories(./inc)
 
 set(CMAKE_DEBUG_POSTFIX d)
