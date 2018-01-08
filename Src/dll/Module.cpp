@@ -10,6 +10,21 @@
 using namespace JaegerNet;
 using namespace JaegerNet::Mupen64Plus::Input;
 
+// N64 input values are between -80 and 80.
+// SDL input values are between -32,768 and 32,768
+int8_t SdlAxisValueToN64AxisValue(int16_t sdlAxisValue, bool invert)
+{
+    constexpr int16_t DeadZone = 4096;
+    if (sdlAxisValue > -DeadZone && sdlAxisValue < DeadZone)
+    {
+        return 0;
+    }
+
+    constexpr int16_t SdlUnitsPerN64Unit = 409;
+    auto n64AxisValue = static_cast<int8_t>(sdlAxisValue / SdlUnitsPerN64Unit);
+    return invert ? -n64AxisValue : n64AxisValue;
+}
+
 EXPORT m64p_error CALL PluginGetVersion(m64p_plugin_type* PluginType, int* PluginVersion, int* APIVersion, const char** PluginNamePtr, int* Capabilities)
 {
     if (PluginType)
@@ -66,7 +81,7 @@ EXPORT void CALL ControllerCommand(int /*Control*/, unsigned char* /*Command*/)
     // Unused
 }
 
-EXPORT void CALL GetKeys(int Control, BUTTONS* /*Keys*/)
+EXPORT void CALL GetKeys(int Control, BUTTONS* Keys)
 {
     static std::array<Player, 4> Players = { {1, 2, 3, 4} };
 
@@ -75,7 +90,25 @@ EXPORT void CALL GetKeys(int Control, BUTTONS* /*Keys*/)
         std::terminate();
     }
 
-    ControllerState controllerSTate = Players[Control].NextControllerState();
+    ControllerState controllerState = Players[Control].NextControllerState();
+    Keys->A_BUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::A);
+    Keys->B_BUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::B);
+    Keys->START_BUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::Start);
+    Keys->L_TRIG = static_cast<bool>(controllerState.ButtonState & ControllerButton::Trigger_Left);
+    Keys->R_TRIG = static_cast<bool>(controllerState.ButtonState & ControllerButton::Trigger_Right);
+    Keys->Z_TRIG = static_cast<bool>(controllerState.ButtonState & ControllerButton::Trigger_Z);
+    Keys->L_CBUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::C_Left);
+    Keys->U_CBUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::C_Up);
+    Keys->R_CBUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::C_Right);
+    Keys->D_CBUTTON = static_cast<bool>(controllerState.ButtonState & ControllerButton::C_Down);
+
+    Keys->L_DPAD = static_cast<bool>(controllerState.DPadButtonState & ControllerDPadButton::Left);
+    Keys->U_DPAD = static_cast<bool>(controllerState.DPadButtonState & ControllerDPadButton::Up);
+    Keys->R_DPAD = static_cast<bool>(controllerState.DPadButtonState & ControllerDPadButton::Right);
+    Keys->D_DPAD = static_cast<bool>(controllerState.DPadButtonState & ControllerDPadButton::Down);
+
+    Keys->X_AXIS = SdlAxisValueToN64AxisValue(controllerState.AxisXValue, false);
+    Keys->Y_AXIS = SdlAxisValueToN64AxisValue(controllerState.AxisYValue, true);
 }
 
 EXPORT void CALL InitiateControllers(CONTROL_INFO ControlInfo)
