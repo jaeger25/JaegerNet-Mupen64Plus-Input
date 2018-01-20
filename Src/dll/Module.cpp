@@ -14,12 +14,6 @@ using namespace JaegerNet::Mupen64Plus::Input;
 // SDL input values are between -32,768 and 32,768
 int8_t SdlAxisValueToN64AxisValue(int16_t sdlAxisValue, bool invert)
 {
-    constexpr int16_t DeadZone = 4096;
-    if (sdlAxisValue > -DeadZone && sdlAxisValue < DeadZone)
-    {
-        return 0;
-    }
-
     constexpr int16_t SdlUnitsPerN64Unit = 409;
     auto n64AxisValue = static_cast<int8_t>(sdlAxisValue / SdlUnitsPerN64Unit);
     return invert ? -n64AxisValue : n64AxisValue;
